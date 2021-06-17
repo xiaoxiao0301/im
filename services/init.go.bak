@@ -1,0 +1,30 @@
+package services
+
+import (
+	"errors"
+	"fmt"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/go-xorm/xorm"
+	"hello/model"
+	"log"
+)
+
+var DbEngine *xorm.Engine
+
+func init() {
+	driverName := "mysql"
+	DatasourceName := "root:123456@(127.0.0.1:3306)/im?charset=utf8"
+	err := errors.New("")
+	DbEngine,err = xorm.NewEngine(driverName,DatasourceName)
+	if nil != err && "" != err.Error() {
+		log.Fatal(err.Error())
+	}
+	// 是否显示SQL语句
+	DbEngine.ShowSQL(true)
+	// 设置数据库最大连接数
+	DbEngine.SetMaxOpenConns(2)
+	// 自动User
+	DbEngine.Sync2(new(model.User))
+	fmt.Println("init database ok!")
+}
+

@@ -1,0 +1,33 @@
+package model
+
+import "time"
+
+const (
+	SEX_WOMEN  = "W"
+	SEX_MAN    = "M"
+	SEX_UNKNOW = "U"
+)
+
+type User struct {
+	// 用户ID
+	Id int64 `xorm:"pk autoincr bigint(20)" form:"id" json:"id"`
+	// 用户手机号
+	Mobile string `xorm:"varchar(20)" form:"mobile" json:"mobile"`
+	// 用户密码 = f(plainpwd+salt), MD5
+	Password string `xorm:"varchar(40)" form:"password" json:"-"`
+	// 头像
+	Avatar string `xorm:"varchar(150)" form:"avatar" json:"avatar"`
+	// 性别
+	Sex string `xorm:"varchar(2)" form:"sex" json:"sex"`
+	// 昵称
+	Nickname string `xorm:"varchar(20)" form:"nickname" json:"nick_name"`
+	//加盐随机字符串6
+	Salt   string `xorm:"varchar(10)" form:"salt" json:"-"`
+	Online int    `xorm:"int(10)" form:"online" json:"online"` //是否在线
+	//前端鉴权因子, chat?id=1&token=x
+	Token string `xorm:"varchar(40)" form:"token" json:"token"`
+	// 简介
+	Memo string `xorm:"varchar(140)" form:"memo" json:"memo"`
+	// 创建时间
+	CreateAt time.Time `xorm:"datetime" form:"createAt" json:"create_at"`
+}
