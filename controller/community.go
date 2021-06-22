@@ -25,3 +25,13 @@ func CreateCommunity(response http.ResponseWriter, request *http.Request) {
 		util.RespSuccess(response, comm, "创建群聊成功")
 	}
 }
+
+// CommunityList 群聊列表
+func CommunityList(response http.ResponseWriter, request *http.Request) {
+	userIdStr := request.FormValue("userid")
+	pageStr := request.FormValue("page")
+	userid, _ := strconv.Atoi(userIdStr)
+	page, _ := strconv.Atoi(pageStr)
+	list, total := communityService.CommunityList(int64(userid), page)
+	util.RespSuccessList(response, list, total, page, "获取成功")
+}

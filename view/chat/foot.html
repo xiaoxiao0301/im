@@ -311,7 +311,7 @@
                     loadcommunitys:function(){
                         var that = this;
                         post("contact/community",{userid:userId()},function(res){
-                            that.communitys = res.rows ||[];
+                            that.communitys = res.data ||[];
                         })
                     },
                     addfriend:function(){
