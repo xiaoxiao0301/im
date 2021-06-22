@@ -72,3 +72,9 @@ func (this *UserService) LoginUser(
 		return user, errors.New("手机号或密码错误")
 	}
 }
+
+// FindUser 查找用户
+func (this *UserService) FindUser(userid int64) (user model.User) {
+	config.GetDbEngine().Where("id = ?", userid).Get(&user)
+	return user
+}

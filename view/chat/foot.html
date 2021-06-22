@@ -254,7 +254,7 @@
                     singlemsg:function(user){
                         console.log(user)
                         this.win = "single";
-                        this.title = "和"+user.nickname+"聊天中";
+                        this.title = "和"+user.nick_name+"聊天中";
                         this.msgcontext.dstid = user.id;
                         this.msgcontext.cmd = 10;
                     },
@@ -301,8 +301,8 @@
                         var that = this;
                         post("contact/friend-list",{userid:userId()},function(res){
                             that.friends = res.data ||[];
-                            var usermap = usermap;
-                            for(var i in res.data){
+                            var usermap = [];
+                            for(let i in res.data){
                                 usermap[res.data[i].id]=res.data[i];
                             }
                             this.usermap = usermap;
