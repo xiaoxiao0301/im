@@ -346,7 +346,7 @@
                     },
                     _joincomunity:function(dstobj){
                         var that = this;
-                        post("user/joincommunity",{dstid:dstobj},function(res){
+                        post("user/joincommunity",{dstid:dstobj,userid:userId()},function(res){
                             if(res.code==200){
                                 mui.toast("添加成功");
 

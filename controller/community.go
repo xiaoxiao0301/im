@@ -8,6 +8,7 @@ import (
 )
 
 var communityService services.CommunityService
+var groupService services.GroupService
 
 // CreateCommunity 创建群聊
 func CreateCommunity(response http.ResponseWriter, request *http.Request) {
@@ -22,6 +23,7 @@ func CreateCommunity(response http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		util.RespFail(response, err.Error())
 	} else {
+		groupService.AddGroup(int64(userId), int64(comm.Id))
 		util.RespSuccess(response, comm, "创建群聊成功")
 	}
 }
@@ -32,6 +34,6 @@ func CommunityList(response http.ResponseWriter, request *http.Request) {
 	pageStr := request.FormValue("page")
 	userid, _ := strconv.Atoi(userIdStr)
 	page, _ := strconv.Atoi(pageStr)
-	list, total := communityService.CommunityList(int64(userid), page)
+	list, total := groupService.CommunityList(int64(userid), page)
 	util.RespSuccessList(response, list, total, page, "获取成功")
 }

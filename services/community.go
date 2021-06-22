@@ -4,8 +4,6 @@ import (
 	"errors"
 	"hello/config"
 	"hello/model"
-	"log"
-	"math"
 )
 
 type CommunityService struct {
@@ -34,29 +32,9 @@ func (this *CommunityService) CreateCommunity(userId int64, cate int, name, icon
 	return comm, err
 }
 
-// CommunityList 群聊列表
-func (this *CommunityService) CommunityList(userId int64, page int) (comm []model.Community, totalPage int) {
-	comm = make([]model.Community, 0)
-	community := model.Community{}
-	rowCounts, err := config.GetDbEngine().Where("user_id = ?", userId).Count(&community)
-	if err != nil {
-		log.Fatalln(err.Error())
-	}
-	// 没有创建群聊或加入群聊
-	if rowCounts <= 0 {
-		return comm, 0
-	}
-
-	totalPage = int(math.Ceil(float64(rowCounts) / float64(config.PAGE_SIZE)))
-	if page >= totalPage {
-		page = totalPage
-	}
-	if page <= 0 {
-		page = 1
-	}
-
-	config.GetDbEngine().Where("user_id = ?", userId).Limit(config.PAGE_SIZE, (page-1)*config.PAGE_SIZE).Find(&comm)
-	return comm, totalPage
+func (this *CommunityService) GetCommunityInfo(communityId int64) (comm model.Community) {
+	config.GetDbEngine().Where("id = ?", communityId).Get(&comm)
+	return comm
 }
 
 // 获取群类型
