@@ -9,6 +9,8 @@ import (
 	"log"
 )
 
+// xorm手册： https://gobook.io/read/gitea.com/xorm/manual-zh-CN/
+
 type DbConfig struct {
 	Type         string
 	Hostname     string
@@ -18,6 +20,8 @@ type DbConfig struct {
 	Password     string
 	Character    string
 }
+
+const PAGE_SIZE = 10
 
 var dbConfig *DbConfig
 

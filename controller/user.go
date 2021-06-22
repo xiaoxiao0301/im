@@ -16,7 +16,7 @@ func UserRegister(response http.ResponseWriter, request *http.Request) {
 	mobile := request.FormValue("mobile")
 	password := request.FormValue("password")
 	nickname := fmt.Sprintf("user%06d", rand.Int31())
-	avatar := ""
+	avatar := "https://cdn.learnku.com/uploads/images/201710/14/1/s5ehp11z6s.png"
 	sex := model.SEX_UNKNOW
 	user, err := userService.RegisterUser(mobile, password, nickname, avatar, sex)
 	if err != nil {

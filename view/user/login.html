@@ -60,6 +60,8 @@
                     if(res.code!=0){
                         mui.toast(res.message)
                     }else{
+                        sessionStorage.setItem("loginUser", JSON.stringify(res.data))
+                        sessionStorage.setItem("userid", res.data.id)
                         let url = "/chat/index.shtml?id=" + res.data.id + "&token=" + res.data.token
                         location.href = url
                         // mui.toast("登录成功,即将跳转")

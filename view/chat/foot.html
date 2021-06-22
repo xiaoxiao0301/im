@@ -205,9 +205,6 @@
                             })
                         }
                     },
-                    showweixin:function(){
-                        mui.alert("请加微信号jiepool-winlion索取")
-                    } ,
                     showmsg:function(user,msg){
                         var data={
 
@@ -302,11 +299,11 @@
                     },
                     loadfriends:function(){
                         var that = this;
-                        post("contact/friend",{userid:userId()},function(res){
-                            that.friends = res.rows ||[];
+                        post("contact/friend-list",{userid:userId()},function(res){
+                            that.friends = res.data ||[];
                             var usermap = usermap;
-                            for(var i in res.rows){
-                                usermap[res.rows[i].id]=res.rows[i];
+                            for(var i in res.data){
+                                usermap[res.data[i].id]=res.data[i];
                             }
                             this.usermap = usermap;
                         }.bind(this))
@@ -334,9 +331,11 @@
                         document.querySelector('.mui-popup-input input').type = 'number';
                     },
                     _addfriend:function(dstobj){
-                        var user = userInfo();
-
-                        post("user/addfriend",{dstid:dstobj,userid: user.id,pic:user.avatar,content:user.nickname,memo: "请求加你为好友"},function(res){
+                        // var user = userInfo();
+                        let user = sessionStorage.getItem("loginUser")
+                        let userInfo = JSON.parse(user)
+                        console.log(userInfo)
+                        post("contact/addfriend",{dstid:dstobj,userid: userInfo.id,pic:userInfo.avatar,content:userInfo.nick_name,memo: "请求加你为好友"},function(res){
                             if(res.code==200){
                                 mui.toast("添加成功");
                                 that.loadfriends();
@@ -376,7 +375,8 @@
                     quit:function () {
                         sessionStorage.removeItem("userid")
                         sessionStorage.removeItem("userinfo")
-                        location.href="login.shtml"
+                        sessionStorage.removeItem("loginUser")
+                        location.href="/user/login.shtml"
                     }
 
 
