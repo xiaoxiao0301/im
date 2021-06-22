@@ -8,6 +8,7 @@ import (
 )
 
 var groupServices services.GroupService
+var communityServices services.CommunityService
 
 // Joincommunity 加入群聊
 func Joincommunity(response http.ResponseWriter, request *http.Request) {
@@ -17,7 +18,13 @@ func Joincommunity(response http.ResponseWriter, request *http.Request) {
 	dstId, _ := strconv.Atoi(dstIdStr)
 	userId, _ := strconv.Atoi(userIdStr)
 	memo := "申请加入群聊"
-	group, err := groupServices.AddCommunity(int64(userId), int64(dstId), memo)
+	isExists := communityServices.IsExistsCommunity(int64(dstId))
+	if !isExists {
+		util.RespFail(response, "您要加入的群聊不存在")
+		return
+	}
+
+	group, err := groupServices.UserAddGroup(int64(userId), int64(dstId), memo)
 	if err != nil {
 		util.RespFail(response, err.Error())
 	} else {

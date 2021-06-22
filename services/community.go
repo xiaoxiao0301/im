@@ -4,6 +4,7 @@ import (
 	"errors"
 	"hello/config"
 	"hello/model"
+	"log"
 )
 
 type CommunityService struct {
@@ -32,9 +33,23 @@ func (this *CommunityService) CreateCommunity(userId int64, cate int, name, icon
 	return comm, err
 }
 
+// GetCommunityInfo 根据id获取群详细信息
 func (this *CommunityService) GetCommunityInfo(communityId int64) (comm model.Community) {
 	config.GetDbEngine().Where("id = ?", communityId).Get(&comm)
 	return comm
+}
+
+// IsExistsCommunity 根据id判断群聊是否存在
+func (this *CommunityService) IsExistsCommunity(communityId int64) bool {
+	ok, err := config.GetDbEngine().Where("id = ?", communityId).Get(&model.Community{})
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+	if ok {
+		return true
+	} else {
+		return false
+	}
 }
 
 // 获取群类型

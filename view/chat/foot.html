@@ -347,12 +347,12 @@
                     _joincomunity:function(dstobj){
                         var that = this;
                         post("user/joincommunity",{dstid:dstobj,userid:userId()},function(res){
-                            if(res.code==200){
+                            if(res.code==0){
                                 mui.toast("添加成功");
 
                                 that.loadcommunitys();
                             }else{
-                                mui.toast(res.msg);
+                                mui.toast(res.message);
                             }
                         })
                     },

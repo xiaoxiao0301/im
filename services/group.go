@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"hello/config"
 	"hello/model"
 	"log"
@@ -68,10 +69,23 @@ func (this *GroupService) AddGroup(userid, dstid int64) {
 
 }
 
-func (this *GroupService) AddCommunity(userId int64, communityId int64, memo string) (group model.Group, err error) {
+func (this *GroupService) UserAddGroup(userId int64, communityId int64, memo string) (group model.Group, err error) {
 	// 不能重复加入
+	ok, err := config.GetDbEngine().Where("user_id = ? and dst_id = ? and type = ?", userId, communityId, model.CONTACT_TYPE_COMMUNITY).Get(&model.Group{})
+	if ok {
+		return model.Group{}, errors.New("您已经在群里了")
+	}
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+	// 判断要加入的群聊是否存在，在外面已经判断过了
+	group = model.Group{
+		UserId: userId,
+		DstId:  communityId,
+		Type:   model.CONTACT_TYPE_COMMUNITY,
+		Memo:   memo,
+	}
 
-	// 要添加的群是否存在
-
+	_, err = config.GetDbEngine().InsertOne(&group)
 	return group, nil
 }
