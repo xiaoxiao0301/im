@@ -7,6 +7,7 @@ import (
 	"hello/util"
 	"math/rand"
 	"net/http"
+	"strconv"
 )
 
 var userService services.UserService
@@ -37,4 +38,11 @@ func UserLogin(response http.ResponseWriter, request *http.Request) {
 	} else {
 		util.RespSuccess(response, user, "登陆成功!")
 	}
+}
+
+func UserFind(response http.ResponseWriter, request *http.Request) {
+	userid := request.FormValue("id")
+	userId, _ := strconv.ParseInt(userid, 10, 64)
+	user := userService.FindUser(userId)
+	util.RespSuccess(response, user, "获取成功")
 }

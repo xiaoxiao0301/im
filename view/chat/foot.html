@@ -2,8 +2,9 @@
 <script>
 
     function upload(dom){
+        console.log("上传图片了哈")
         uploadfile("attach/upload",dom,function(res){
-            if(res.code==200){
+            if(res.code ==0){
                 app.sendpicmsg(res.data)
             }
 
@@ -101,10 +102,11 @@
                     var user = userInfo()
                     if(!!user){
                         this.profile.avatar = user.avatar;
-                        this.profile.nickname = user.nickname;
+                        this.profile.nickname = user.nick_name;
 
                         this.profile.memo = user.memo;
                         var url="ws://"+location.host+"/chat?id="+userId()+"&token=" +user.token;
+                        console.log('ws-url:', url)
                         this.webSocket=new WebSocket(url);
                         this.initwebsocket()
                     }
@@ -252,26 +254,30 @@
                         this.webSocket.send(JSON.stringify(msg))
                     },
                     singlemsg:function(user){
-                        console.log(user)
+                        console.log("当前聊天用户，", user)
                         this.win = "single";
                         this.title = "和"+user.nick_name+"聊天中";
                         this.msgcontext.dstid = user.id;
                         this.msgcontext.cmd = 10;
                     },
                     groupmsg:function(group){
-
+                        console.log("群信息,", group)
                         this.win = "group";
                         this.title=group.name;
-                        this.msgcontext.dstid = group.id;
+                        this.msgcontext.dstid = group.community_id;
                         this.msgcontext.cmd = 11;
                     },
                     loaduserinfo:function(userid,cb){
+                        console.log('loaduserinfo01',userid)
+                        console.log('loaduserinfo1:', this.usermap)
                         var userinfo = this.usermap[userid];
+                        console.log('loaduserinfo2:', userinfo)
                         if(!userinfo){
                             post("user/find",{id:userid},function(res){
                                 cb(res.data);
                                 this.usermap[userid] = res.data;
                             }.bind(this))
+                        console.log('loaduserinfo3:', this.usermap)
                         }else{
                             cb(userinfo)
                         }
@@ -284,7 +290,9 @@
 
                     },
                     initwebsocket:function(){
+                        console.log("init websocket")
                         this.webSocket.onmessage = function(evt){
+                            console.log("接收到服务器返回的数据了")
                             this.onmessage(JSON.parse(evt.data));
                         }.bind(this)
                         this.webSocket.onclose=function (evt) {

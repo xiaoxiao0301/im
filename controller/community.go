@@ -24,6 +24,7 @@ func CreateCommunity(response http.ResponseWriter, request *http.Request) {
 		util.RespFail(response, err.Error())
 	} else {
 		groupService.AddGroup(int64(userId), int64(comm.Id))
+		AddGroupIdToUserGroupSet(int64(userId), comm.Id) // 创建群聊后将群聊id加入用户群组的set中
 		util.RespSuccess(response, comm, "创建群聊成功")
 	}
 }

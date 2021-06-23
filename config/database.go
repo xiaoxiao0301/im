@@ -48,12 +48,12 @@ func GetDbEngine() *xorm.Engine {
 		log.Fatal(err.Error())
 	}
 	// 是否显示SQL语句
-	DbEngine.ShowSQL(true)
+	DbEngine.ShowSQL(false)
 	// 设置数据库最大连接数
 	DbEngine.SetMaxOpenConns(2)
 	// 自动User
-	DbEngine.Sync2(new(model.User), new(model.Contact), new(model.Group), new(model.Community))
-	fmt.Println("init database ok!")
+	DbEngine.Sync2(new(model.User), new(model.Contact), new(model.Group), new(model.Community), new(model.Message))
+	//fmt.Println("init database ok!")
 
 	return DbEngine
 }

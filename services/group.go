@@ -69,6 +69,7 @@ func (this *GroupService) AddGroup(userid, dstid int64) {
 
 }
 
+// UserAddGroup 将用户添加到群聊中
 func (this *GroupService) UserAddGroup(userId int64, communityId int64, memo string) (group model.Group, err error) {
 	// 不能重复加入
 	ok, err := config.GetDbEngine().Where("user_id = ? and dst_id = ? and type = ?", userId, communityId, model.CONTACT_TYPE_COMMUNITY).Get(&model.Group{})
@@ -88,4 +89,15 @@ func (this *GroupService) UserAddGroup(userId int64, communityId int64, memo str
 
 	_, err = config.GetDbEngine().InsertOne(&group)
 	return group, nil
+}
+
+// SearchCommunityIds 获取用户的所有群ids
+func (this *GroupService) SearchCommunityIds(userId int64) (commIds []int64) {
+	commIds = make([]int64, 0)
+	groups := make([]model.Group, 0)
+	config.GetDbEngine().Where("user_id = ? and type = ?", userId, model.CONTACT_TYPE_COMMUNITY).Find(&groups)
+	for _, v := range groups {
+		commIds = append(commIds, v.DstId)
+	}
+	return commIds
 }

@@ -14,20 +14,20 @@
     }
     function userInfo(o){
         if(typeof  o =="undefined"){
-            var r = sessionStorage.getItem("userinfo");
+            var r = sessionStorage.getItem("loginUser");
             if(!!r){
                 return JSON.parse(r);
             }else{
                 return null
             }
         }else{
-            sessionStorage.setItem("userinfo",JSON.stringify(o));
+            sessionStorage.setItem("loginUser",JSON.stringify(o));
         }
     }
     var url = location.href;
     var isOpen = url.indexOf("/login")>-1 || url.indexOf("/register")>-1
     if (!userId() && !isOpen){
-      // location.href = "login.shtml";
+      location.href = "/user/login.shtml";
     }
 
 </script>
