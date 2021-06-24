@@ -7,6 +7,7 @@ import (
 	"hello/model"
 	"hello/services"
 	"log"
+	"net"
 	"net/http"
 	"strconv"
 	"sync"
@@ -25,13 +26,15 @@ var clientMap map[int64]*Node = make(map[int64]*Node, 0)
 //读写锁
 var rwlocker sync.RWMutex
 
+// 存储局域网广播消息
 var udpSendScan chan []byte = make(chan []byte, 1024)
 
 var userServices services.UserService
 var messageServices services.MessageService
 
 func init() {
-
+	go udpSendProc()
+	go udpRecvProc()
 }
 
 // Chat 聊天
@@ -72,13 +75,13 @@ func Chat(response http.ResponseWriter, request *http.Request) {
 	rwlocker.Lock()
 	clientMap[userid] = node
 	rwlocker.Unlock()
-	go sendproc(node)
-	go recvproc(node)
+	go sendProc(node)
+	go recvProc(node)
 	log.Printf("%d is connected\n", userid)
 }
 
 // ws 发送
-func sendproc(node *Node) {
+func sendProc(node *Node) {
 	for {
 		select {
 		case data := <-node.DataQueue:
@@ -92,18 +95,68 @@ func sendproc(node *Node) {
 }
 
 // ws 接收
-func recvproc(node *Node) {
+func recvProc(node *Node) {
 	for {
 		_, data, err := node.Conn.ReadMessage()
 		if err != nil {
 			log.Println(err.Error())
 			return
 		}
-		// 把消息广播到局域网
-		//broadMsg(data)
 		log.Printf("recv<=%s\n", string(data))
-		dispathMessage(data)
+		// 把消息广播到局域网
+		broadMsg(data)
+		//dispathMessage(data)
 	}
+}
+
+// udp 发送
+func udpSendProc() {
+	log.Println("into start udp send proc")
+	conn, err := net.DialUDP("udp", nil, &net.UDPAddr{
+		IP:   net.IPv4(0, 0, 0, 0),
+		Port: 3000,
+	})
+	if err != nil {
+		log.Println("conn upd server err:", err.Error())
+		return
+	}
+	defer conn.Close()
+	// conn发送数据
+	for true {
+		select {
+		case data := <-udpSendScan:
+			_, err = conn.Write(data)
+			if err != nil {
+				log.Println(err.Error())
+				return
+			}
+		}
+	}
+}
+
+// udp 接收
+func udpRecvProc() {
+	log.Println("into start upd recv proc")
+	conn, err := net.ListenUDP("udp", &net.UDPAddr{
+		IP:   net.IPv4zero,
+		Port: 3000,
+	})
+	defer conn.Close()
+	if err != nil {
+		log.Println("listen upd fail err ", err.Error())
+		return
+	}
+	for true {
+		buff := make([]byte, 1024)
+		n, _, err := conn.ReadFromUDP(buff)
+		if err != nil {
+			log.Println(err.Error())
+			return
+		}
+		// 数据处理
+		dispathMessage(buff[:n])
+	}
+	log.Println("stop udp recv proc")
 }
 
 // 根据消息类型处理
@@ -147,6 +200,7 @@ func sendMsg(userId int64, data []byte) {
 	}
 }
 
+// 将消息发送到局域网中
 func broadMsg(data []byte) {
 	udpSendScan <- data
 }
