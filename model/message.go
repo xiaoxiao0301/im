@@ -1,21 +1,19 @@
 package model
 
-import "time"
-
 type Message struct {
-	Id        int64     `xorm:"bigint(20) pk autoincr" json:"id"`
-	UserId    int64     `xorm:"bigint(20) comment('发送用户id')" json:"userid,omitempty"`
-	DstId     int64     `xorm:"bigint(20) comment('接收id，用户id或者群聊id')" json:"dstid,omitempty"`
-	Cmd       int       `xorm:"int(11) comment('消息类别，单聊还是群聊')" json:"cmd,omitempty"`
-	Media     int       `xorm:"int(11) comment('消息样式，文本，图片，语音，视频')" json:"media,omitempty"`
-	Content   string    `xorm:"varchar(255) comment('消息内容')" json:"content,omitempty"`
-	Pic       string    `xorm:"varchar(255) comment('预览图片')" json:"pic,omitempty"`
-	Url       string    `xorm:"varchar(255) comment('服务的URL')" json:"url,omitempty"`
-	Memo      string    `xorm:"varchar(255) comment('简单描述')" json:"memo,omitempty"`
-	Amount    int       `xorm:"int(11) comment('金额，扩展字段')" json:"amount,omitempty"`
-	CreatedAt time.Time `xorm:"datetime created" json:"create_at"`
-	UpdatedAt time.Time `xorm:"datetime updated" json:"updated_at"`
-	DeletedAt time.Time `xorm:"datetime deleted" json:"deleted_at"`
+	Id        int64   `xorm:"bigint(20) pk autoincr" json:"id"`
+	UserId    int64   `xorm:"bigint(20) comment('发送用户id')" json:"userid,omitempty"`
+	DstId     int64   `xorm:"bigint(20) comment('接收id，用户id或者群聊id')" json:"dstid,omitempty"`
+	Cmd       int     `xorm:"int(11) comment('消息类别，单聊还是群聊')" json:"cmd,omitempty"`
+	Media     int     `xorm:"int(11) comment('消息样式，文本，图片，语音，视频')" json:"media,omitempty"`
+	Content   string  `xorm:"varchar(255) comment('消息内容')" json:"content,omitempty"`
+	Pic       string  `xorm:"varchar(255) comment('预览图片')" json:"pic,omitempty"`
+	Url       string  `xorm:"varchar(255) comment('服务的URL')" json:"url,omitempty"`
+	Memo      string  `xorm:"varchar(255) comment('简单描述')" json:"memo,omitempty"`
+	Amount    int     `xorm:"int(11) comment('金额，扩展字段')" json:"amount,omitempty"`
+	CreatedAt Mytimes `xorm:"timestamp created" json:"create_at"`
+	UpdatedAt Mytimes `xorm:"timestamp updated" json:"updated_at"`
+	DeletedAt Mytimes `xorm:"timestamp deleted" json:"deleted_at"`
 }
 
 // 消息类别

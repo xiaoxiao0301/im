@@ -36,7 +36,6 @@ func (this *UserService) RegisterUser(
 	salt := fmt.Sprintf("%06d", rand.Int31n(10000))
 	user.Salt = salt
 	user.Password = util.EncryptPwd(password, salt)
-	user.CreateAt = time.Now()
 	user.Token = fmt.Sprintf("%08d", rand.Int31())
 
 	// 前端恶意插入字符，数据库操作失败

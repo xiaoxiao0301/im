@@ -46,6 +46,12 @@ func main() {
 	http.HandleFunc("/attach/upload", controller.UploadFileHelper)
 	// 聊天
 	http.HandleFunc("/chat", controller.Chat)
+	// 获取聊天记录列表
+	http.HandleFunc("/message/list", controller.MessageList)
+	// t-测试自定义的添加时间
+	http.HandleFunc("/test", controller.T)
+	// l-列表输出格式时间
+	http.HandleFunc("/test-list", controller.L)
 
 	// 静态资源目录支持
 	//http.Handle("/", http.FileServer(http.Dir(".")))

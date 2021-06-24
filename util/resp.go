@@ -15,8 +15,8 @@ type ResponseMessage struct {
 type PageResponseMessage struct {
 	Code        int         `json:"code"`
 	Message     string      `json:"message"`
-	CurrentPage int         `json:"current_page"`
-	TotalPage   int         `json:"total_page"`
+	CurrentPage int         `json:"current_page,omitempty"`
+	TotalPage   int         `json:"total_page,omitempty"`
 	Data        interface{} `json:"data"`
 }
 

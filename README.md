@@ -84,3 +84,30 @@ cp -arf ./view ./release/
 
 }
 ```
+
+## 扩展
+xorm默认输出的json格式化时间戳格式形式是`2021-06-23T14:54:22+08:00` 下面来优化一下
+1. 自定义一个time.Time类型
+2. 实现MarshalJSON方法
+下面来看代码
+```go
+import "time"
+
+type Mytimes time.Time
+
+func (this Mytimes) MarshalJSON() ([]byte, error)  {
+	if time.Time(this).IsZero() {
+		return []byte(`""`), nil
+	}
+	return []byte(`"` + time.Time(this).Format("2006-01-02 15:04:05") + `"`), nil
+}
+
+```   
+```go
+type TestTime struct {
+	Id int64 `xorm:"bigint(20) pk autoincr" json:"id"`
+	Name string `xorm:"varchar(10)" json:"name"`
+	CreatedAt Mytimes `xorm:"timestamp created" json:"created_at"`
+	UpdatedAt time.Time `xorm:"timestamp updated" json:"updated_at"`
+}
+```

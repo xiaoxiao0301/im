@@ -1,9 +1,5 @@
 package model
 
-import (
-	"time"
-)
-
 const (
 	SEX_WOMEN  = "W"
 	SEX_MAN    = "M"
@@ -31,5 +27,7 @@ type User struct {
 	// 简介
 	Memo string `xorm:"varchar(140)" json:"memo"`
 	// 创建时间
-	CreateAt time.Time `xorm:"datetime" json:"create_at"`
+	CreateAt  Mytimes `xorm:"timestamp created" json:"create_at"`
+	UpdatedAt Mytimes `xorm:"timestamp updated" json:"updated_at"`
+	DeletedAt Mytimes `xorm:"timestamp deleted" json:"deleted_at"`
 }
